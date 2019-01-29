@@ -62,16 +62,16 @@ namespace automapper
             //Flattering - Partiendo de un modelo complejo pasarlo a un modelo simple
 
             //----------------------------------------------------EJEMPLO 2: Mapeamos con automapper
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<AuthorEntity, AuthorModel>();
-            });
+            //Mapper.Initialize(cfg =>
+            //{
+            //    cfg.CreateMap<AuthorEntity, AuthorModel>();
+            //});
 
-            var authorModelArturoConMapper = Mapper.Map<AuthorEntity, AuthorModel>(authorEntidadArturo);
+            //var authorModelArturoConMapper = Mapper.Map<AuthorEntity, AuthorModel>(authorEntidadArturo);
 
-            Console.WriteLine($"{authorModelArturoConMapper.Name},{authorModelArturoConMapper.Age},{authorModelArturoConMapper.BooksCount}");
+            //Console.WriteLine($"{authorModelArturoConMapper.Name},{authorModelArturoConMapper.Age},{authorModelArturoConMapper.BooksCount}");
 
-            //--------------------------------------------------EJEMPLO 3: Definición personalizada de propiedades
+            //--------------------------------------------------EJEMPLO 3: Definición personalizada de propiedades o Projection
             //Mapper.Initialize(cfg =>
             //{
             //    cfg.CreateMap<BookEntity, BookModel>()
@@ -80,6 +80,7 @@ namespace automapper
             //        .ForMember(dest => dest.TimeSent, opt => opt.Ignore());
             //});
             //IEnumerable<BookModel> libros = Mapper.Map<BookModel[]>(authorEntidadArturo.Books);
+            /// El tipo de colecciones que soporta: IEnumrables, ICollection, IList, Array/
 
             //foreach (var elem in libros)
             //{
@@ -89,7 +90,30 @@ namespace automapper
 
 
             //--------------------------------------------------EJEMPLO 4: Reverse Mapping and Unflattering
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<BookEntity, BookModel>()
+                .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(entity => entity.Author.Name))
+                .ReverseMap();
+            });
 
+            IEnumerable<BookModel> libros = Mapper.Map<BookModel[]>(authorEntidadArturo.Books);
+
+            var libroModelo = new BookModel();
+            libroModelo.Pages = 300;
+            libroModelo.Edition = 3;
+            libroModelo.AuthorName = authorEntidadArturo.Name;
+
+            var libroModelo_aEntidad = new BookEntity();
+
+            Mapper.Map(libroModelo, libroModelo_aEntidad);
+
+            Console.WriteLine($"{libroModelo_aEntidad.Id}");
+
+
+
+            //--------------------------------------------------EJEMPLO 5: Nested types
+            //buen ejemplo en https://dotnettutorials.net/lesson/automapper-with-nested-types/
 
 
 
