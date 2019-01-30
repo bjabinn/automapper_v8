@@ -1,4 +1,4 @@
-﻿namespace automapper
+﻿namespace AspNetCoreMVC
 {
     public class BookEntity
     {

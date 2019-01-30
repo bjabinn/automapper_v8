@@ -1,10 +1,9 @@
-﻿using System;
-namespace automapper.Models
+﻿namespace automapper
 {
     public class AddressDTO
     {
-        public AddressDTO()
-        {
-        }
+        public string City { get; set; }
+        public string EmpStae { get; set; }
+        public string Country { get; set; }
     }
 }

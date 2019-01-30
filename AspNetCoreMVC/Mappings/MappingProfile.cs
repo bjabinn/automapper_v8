@@ -1,10 +1,12 @@
 ﻿using System;
-namespace AspNetCoreMVC.Mappings
+using AutoMapper;
+namespace AspNetCoreMVC
 {
-    public class MappingProfile
+    public class MappingProfile : Profile
     {
         public MappingProfile()
         {
+            CreateMap<AuthorEntity, AuthorModel>();
         }
     }
 }

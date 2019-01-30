@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace automapper
+namespace AspNetCoreMVC
 {
     public class AuthorEntity
     {

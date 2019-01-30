@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
+using AutoMapper.Mappers;
 
 namespace automapper
 {
@@ -42,12 +43,9 @@ namespace automapper
             };
 
             authorEntidadArturo.Books = new List<BookEntity>() { book1, book2, book3 };
-            //authorEntidadArturo.Books.Add(book1);
-            //authorEntidadArturo.Books.Add(book2);
-            //authorEntidadArturo.Books.Add(book3);
 
 
-            //----------------------------------------------------EJEMPLO 1: Como hacer un mapeo "a mano"
+            //----------------------------------------------------EJEMPLO 0: Como hacer un mapeo "a mano"
 
 
             //mapeo Entity -> Model
@@ -59,9 +57,9 @@ namespace automapper
             //Console.WriteLine($"{authorModelArturo_aManurrio.Name},{authorModelArturo_aManurrio.Age},{authorModelArturo_aManurrio.BooksCount}");
 
 
-            //Flattering - Partiendo de un modelo complejo pasarlo a un modelo simple
 
-            //----------------------------------------------------EJEMPLO 2: Mapeamos con automapper
+            //Flattering - Partiendo de un modelo complejo pasarlo a un modelo simple
+            //----------------------------------------------------EJEMPLO 1: Mapeamos con automapper
             //Mapper.Initialize(cfg =>
             //{
             //    cfg.CreateMap<AuthorEntity, AuthorModel>();
@@ -71,16 +69,17 @@ namespace automapper
 
             //Console.WriteLine($"{authorModelArturoConMapper.Name},{authorModelArturoConMapper.Age},{authorModelArturoConMapper.BooksCount}");
 
-            //--------------------------------------------------EJEMPLO 3: Definición personalizada de propiedades o Projection
+
+            //---------------------EJEMPLO 2: Definición personalizada de propiedades o Projection
             //Mapper.Initialize(cfg =>
             //{
             //    cfg.CreateMap<BookEntity, BookModel>()
             //        .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(entity => entity.Author.Name))
-            //        .ForMember(dest => dest.FullTitle, opt => opt.MapFrom(entity => entity.Title + " " + entity.Subtitle))
+            //        .ForMember(dest => dest.FullTitle, opt => opt.MapFrom(entity => $"{entity.Title} {entity.Subtitle}"))
             //        .ForMember(dest => dest.TimeSent, opt => opt.Ignore());
             //});
             //IEnumerable<BookModel> libros = Mapper.Map<BookModel[]>(authorEntidadArturo.Books);
-            /// El tipo de colecciones que soporta: IEnumrables, ICollection, IList, Array/
+            //// El tipo de colecciones que soporta: IEnumrables, ICollection, IList, Array/
 
             //foreach (var elem in libros)
             //{
@@ -89,31 +88,90 @@ namespace automapper
             //ATENCION: ResolveUsing = DEPRECATED
 
 
-            //--------------------------------------------------EJEMPLO 4: Reverse Mapping and Unflattering
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<BookEntity, BookModel>()
-                .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(entity => entity.Author.Name))
-                .ReverseMap();
-            });
-
-            IEnumerable<BookModel> libros = Mapper.Map<BookModel[]>(authorEntidadArturo.Books);
-
-            var libroModelo = new BookModel();
-            libroModelo.Pages = 300;
-            libroModelo.Edition = 3;
-            libroModelo.AuthorName = authorEntidadArturo.Name;
-
-            var libroModelo_aEntidad = new BookEntity();
-
-            Mapper.Map(libroModelo, libroModelo_aEntidad);
-
-            Console.WriteLine($"{libroModelo_aEntidad.Id}");
+            //-------------------------------------EJEMPLO 3: Mapeo condicional por tipos de origen y destino
+            //Address address = new Address()
+            //{
+            //    City = "Rota",
+            //    Stae = "Cadiz",
+            //    Country = "España"
+            //};
+            //var config = new MapperConfiguration(cfg => {
+            //    cfg.AddConditionalObjectMapper().Where((s, d) => s.Name == "Address" && d.Name == "AddressDto");
+            //    cfg.CreateMap<Address, AddressDTO>();
+            //});
+            //var mapper = config.CreateMapper();
+            //AddressDTO dto = mapper.Map<Address, AddressDTO>(address);
 
 
 
-            //--------------------------------------------------EJEMPLO 5: Nested types
+            //-----------------------------------------------------------EJEMPLO 4: Conversiones por tipo y/o usando funciones
+            //Mapper.Initialize(cfg => {
+            //    cfg.CreateMap<string, int>().ConvertUsing(s => Convert.ToInt32(s));
+            //    cfg.CreateMap<string, DateTime>().ConvertUsing(new DateTimeTypeConverter());
+            //    cfg.CreateMap<Source, Destination>(); 
+            //}); 
+            //Mapper.AssertConfigurationIsValid();
+
+            //var source = new Source{ 
+            //    Value1 = "5",
+            //    Value2 = "01/01/2000",
+            //};
+            //Destination result = Mapper.Map<Source, Destination>(source); 
+
+
+
+            //--------------------------------------------------EJEMPLO 5: Reverse Mapping and Unflattering
+            //Mapper.Initialize(cfg =>
+            //{
+            //    cfg.CreateMap<BookEntity, BookModel>()
+            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(entity => entity.Author.Name))
+            //    .ReverseMap();
+            //});
+
+            //IEnumerable<BookModel> libros = Mapper.Map<BookModel[]>(authorEntidadArturo.Books);
+
+            //var libroModelo = new BookModel();
+            //libroModelo.Pages = 300;
+            //libroModelo.Edition = 3;
+            //libroModelo.AuthorName = authorEntidadArturo.Name;
+
+            //var libroModelo_aEntidad = new BookEntity();
+
+            //Mapper.Map(libroModelo, libroModelo_aEntidad);
+
+            //Console.WriteLine($"{libroModelo_aEntidad.Id}");
+
+            //------------------------------------------------------------------------------EJEMPLO 6: Nested types
             //buen ejemplo en https://dotnettutorials.net/lesson/automapper-with-nested-types/
+            //Mapper.Initialize(cfg => 
+            //{
+            //    //cfg.CreateMap<Address, AddressDTO>();
+            //    //.ForMember(dest => dest.EmpCity, act => act.MapFrom(src => src.City))
+            //    //.ForMember(dest => dest.EmpStae, act => act.MapFrom(src => src.Stae));
+
+            //    cfg.CreateMap<Employee, EmployeeDTO>();
+            //        //.ForMember(dest => dest.Address, act => act.MapFrom(src => src.address));
+
+            //});
+
+            //Address empAddres = new Address()
+            //{
+            //    City = "Rota",
+            //    Stae = "Cadiz",
+            //    Country = "España"
+            //};
+
+            //Employee emp = new Employee();
+            //emp.Name = "Jose";
+            //emp.Salary = 20000;
+            //emp.Department = "IT";
+            //emp.address = empAddres;
+
+            //var empDTO = Mapper.Map<Employee, EmployeeDTO>(emp);
+
+            //Console.WriteLine("Nombre:" + empDTO.Name + ", Salario:" + empDTO.Salary +", Departmento:" + empDTO.Department);
+            //Console.WriteLine("Ciudad:" + empDTO.Address.City + ", Provincia:" + empDTO.Address.Stae + ", Pais:" + empDTO.Address.Country);
+
 
 
 

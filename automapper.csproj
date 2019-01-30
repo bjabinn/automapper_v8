@@ -48,6 +48,14 @@
     <Compile Include="Entidades\BookEntity.cs" />
     <Compile Include="Entidades\AuthorEntity.cs" />
     <Compile Include="Models\AuthorModel.cs" />
+    <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\EmployeeDTO.cs" />
+    <Compile Include="Models\AddressDTO.cs" />
+    <Compile Include="Models\Source.cs" />
+    <Compile Include="Models\Destination.cs" />
+    <Compile Include="TypeConverter\DateTimeTypeConverter.cs" />
+    <Compile Include="TypeConverter\TypeTypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -55,6 +63,7 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Entidades\" />
+    <Folder Include="TypeConverter\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
