@@ -48,7 +48,7 @@ namespace automapper
             //----------------------------------------------------EJEMPLO 0: Como hacer un mapeo "a mano"
 
 
-            //mapeo Entity -> Model
+            ////mapeo Entity -> Model
             //var authorModelArturo_aManurrio = new AuthorModel();
             //authorModelArturo_aManurrio.Name = authorEntidadArturo.Name;
             //authorModelArturo_aManurrio.Age = authorEntidadArturo.Age;
@@ -79,13 +79,13 @@ namespace automapper
             //        .ForMember(dest => dest.TimeSent, opt => opt.Ignore());
             //});
             //IEnumerable<BookModel> libros = Mapper.Map<BookModel[]>(authorEntidadArturo.Books);
-            //// El tipo de colecciones que soporta: IEnumrables, ICollection, IList, Array/
+            // El tipo de colecciones que soporta: IEnumrables, ICollection, IList, Array/
 
             //foreach (var elem in libros)
             //{
             //    Console.WriteLine($"{elem.Id} {elem.AuthorName}: Titulo:{elem.FullTitle}\n Num.Paginas:{elem.Pages}\n\n");
             //}
-            //ATENCION: ResolveUsing = DEPRECATED
+            ////ATENCION: ResolveUsing = DEPRECATED
 
 
             //-------------------------------------EJEMPLO 3: Mapeo condicional por tipos de origen y destino
@@ -95,28 +95,42 @@ namespace automapper
             //    Stae = "Cadiz",
             //    Country = "España"
             //};
-            //var config = new MapperConfiguration(cfg => {
-            //    cfg.AddConditionalObjectMapper().Where((s, d) => s.Name == "Address" && d.Name == "AddressDto");
-            //    cfg.CreateMap<Address, AddressDTO>();
+            //AddressC addressC = new AddressC()
+            //{
+            //    City = "Fuengirola",
+            //    Stae = "Málaga",
+            //    Country = "España"
+            //};
+            //var config = new MapperConfiguration(cfg =>
+            //{
+            //    cfg.AddConditionalObjectMapper().Where((s, d) => s.Name == d.Name + "DTOO");
             //});
             //var mapper = config.CreateMapper();
-            //AddressDTO dto = mapper.Map<Address, AddressDTO>(address);
+            //AddressDTOO dtoo = mapper.Map<Address, AddressDTOO>(address);
+            //AddressCDTOO dtooC = mapper.Map<AddressC, AddressCDTOO>(addressC);
+
+            //Console.WriteLine($"{dtoo.City}, {dtoo.Stae}, {dtoo.Country} -- tipo: {dtoo.GetType().Name}");
+            //Console.WriteLine($"{dtooC.City}, {dtooC.Stae}, {dtooC.Country} -- tipo: {dtooC.GetType().Name}");
 
 
 
             //-----------------------------------------------------------EJEMPLO 4: Conversiones por tipo y/o usando funciones
-            //Mapper.Initialize(cfg => {
+            //Mapper.Initialize(cfg =>
+            //{
             //    cfg.CreateMap<string, int>().ConvertUsing(s => Convert.ToInt32(s));
             //    cfg.CreateMap<string, DateTime>().ConvertUsing(new DateTimeTypeConverter());
-            //    cfg.CreateMap<Source, Destination>(); 
-            //}); 
+            //    cfg.CreateMap<Source, Destination>();
+            //});
             //Mapper.AssertConfigurationIsValid();
 
-            //var source = new Source{ 
+            //var source = new Source
+            //{
             //    Value1 = "5",
             //    Value2 = "01/01/2000",
             //};
-            //Destination result = Mapper.Map<Source, Destination>(source); 
+            //Destination result = Mapper.Map<Source, Destination>(source);
+
+            //Console.WriteLine($"Value1: {result.Value1} y su tipo es {result.Value1.GetType()}, Value2: {result.Value2} y su tipo es {result.Value2.GetType()}");
 
 
 
@@ -128,10 +142,12 @@ namespace automapper
             //    .ReverseMap();
             //});
 
-            //IEnumerable<BookModel> libros = Mapper.Map<BookModel[]>(authorEntidadArturo.Books);
+            //IList<BookModel> libros = Mapper.Map<BookModel[]>(authorEntidadArturo.Books);
+
+            //Console.WriteLine($"Numero de libros: {libros.Count} y son del tipo {libros.GetType().Name}");
 
             //var libroModelo = new BookModel();
-            //libroModelo.Pages = 300;
+            //libroModelo.Pages = 400;
             //libroModelo.Edition = 3;
             //libroModelo.AuthorName = authorEntidadArturo.Name;
 
@@ -139,19 +155,15 @@ namespace automapper
 
             //Mapper.Map(libroModelo, libroModelo_aEntidad);
 
-            //Console.WriteLine($"{libroModelo_aEntidad.Id}");
+            //Console.WriteLine($"{libroModelo_aEntidad.Pages} y son del tipo {libroModelo_aEntidad.GetType().Name}");
+
 
             //------------------------------------------------------------------------------EJEMPLO 6: Nested types
-            //buen ejemplo en https://dotnettutorials.net/lesson/automapper-with-nested-types/
-            //Mapper.Initialize(cfg => 
+            ////buen ejemplo en https://dotnettutorials.net/lesson/automapper-with-nested-types/
+            //Mapper.Initialize(cfg =>
             //{
-            //    //cfg.CreateMap<Address, AddressDTO>();
-            //    //.ForMember(dest => dest.EmpCity, act => act.MapFrom(src => src.City))
-            //    //.ForMember(dest => dest.EmpStae, act => act.MapFrom(src => src.Stae));
-
+            //    cfg.CreateMap<Address, AddressDTO>();
             //    cfg.CreateMap<Employee, EmployeeDTO>();
-            //        //.ForMember(dest => dest.Address, act => act.MapFrom(src => src.address));
-
             //});
 
             //Address empAddres = new Address()
@@ -169,14 +181,39 @@ namespace automapper
 
             //var empDTO = Mapper.Map<Employee, EmployeeDTO>(emp);
 
-            //Console.WriteLine("Nombre:" + empDTO.Name + ", Salario:" + empDTO.Salary +", Departmento:" + empDTO.Department);
+            //Console.WriteLine("Nombre:" + empDTO.Name + ", Salario:" + empDTO.Salary + ", Departmento:" + empDTO.Department);
             //Console.WriteLine("Ciudad:" + empDTO.Address.City + ", Provincia:" + empDTO.Address.Stae + ", Pais:" + empDTO.Address.Country);
+            //Console.WriteLine($"El tipo de empDTO es: {empDTO.GetType().Name}");
+
+
+            //------------------------------------------------------------------------------EJEMPLO 7: Nested types list
+            //Mapper.Initialize(cfg =>
+            //{
+            //    cfg.CreateMap<Pais, PaisModel>();
+
+            //    cfg.CreateMap<Ciudad, CiudadModel>();
+            //});
+
+            //var pais = new Pais()
+            //{
+            //    id = 1,
+            //    ciudades = new List<Ciudad>() { new Ciudad { name = "Sevilla" }, new Ciudad { name = "Madrid" }, new Ciudad { name = "Barcelona" } }
+            //};
+
+            //var empDTO = Mapper.Map<Pais, PaisModel>(pais);
+
+
+            //Console.WriteLine($"numero de elementos en la lista es: {empDTO.ciudades.Count} y el tipo es {empDTO.GetType().Name} y el listado de tipo: {empDTO.ciudades[0].GetType().Name}");
+
+
+
+
 
 
 
 
             Console.ReadKey();
 
-        }
+        }         
     }
 }
